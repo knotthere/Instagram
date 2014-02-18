@@ -1,0 +1,12 @@
+#map {
+	width:308;
+	height:308;
+	display:inline-block;
+	background-color: #777777;
+}
+
+img {
+	border: 1;
+	border-color: #ffffff;
+	border-style: solid;
+}
