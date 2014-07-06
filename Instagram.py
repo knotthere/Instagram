@@ -83,12 +83,21 @@ class Instagram:
         response = urllib2.urlopen(req)
         result = response.read()
         resultJson = json.loads(result)
-        # May not have an entry...
-        res = resultJson['resourceSets'][0]['resources']
-        if (len(res)):
-            short_address = res[0]['name']
-        else:
-            short_address = "(Bing cannot find!)"
+        # Verify our call succeeded...
+        if resultJson['statusCode'] == 200:
+            # May not have an entry...
+            resSets = resultJson['resourceSets']
+            if (len(resSets) > 0):
+                # Grab the first one
+                res = resSets[0]['resources']
+                if (len(res) > 0):
+                    short_address = res[0]['name']
+                else:
+                    short_address = "(Bing returned no resources!)"
+            else:
+                short_address = "(Bing returned no resourceSets!)"
+        else: 
+            short_address = "(Bing error resultCode: " + str(resultJson['statusCode'])
         showMsg('Bing found: ' + short_address)
         return short_address
 
@@ -154,6 +163,8 @@ class Instagram:
                             ]
 
                     self.add_item(entry)
+            else:
+                showMsg('No [data] in response! ')
 
     instagram_cb.exposed = True
     
